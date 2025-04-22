@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Tracker</title>
+    <style>
+        .progress-bar {
+            width: 100%;
+            background-color: #f0f0f0;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0.3s ease;
+        }
+
+        .level {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Progress Bar with Level Tracker</h2>
+
+    <div class="progress-bar">
+        <div id="progress" class="progress"></div>
+    </div>
+
+    <button onclick="increaseProgress()">Increase Progress</button>
+    <button onclick="resetProgress()">Reset</button>
+
+    <div class="level">
+        Level: <span id="level">0</span>
+    </div>
+
+    <script>
+        let currentProgress = 0;
+        let increment = 20; // Default increment value
+        let level = parseInt(localStorage.getItem('level')) || 0; // Load the level from localStorage
+        const progressBar = document.getElementById('progress');
+        const levelDisplay = document.getElementById('level');
+
+        // Initialize progress and increment values from localStorage
+        window.onload = function () {
+            currentProgress = parseFloat(localStorage.getItem('currentProgress')) || 0;
+            increment = parseFloat(localStorage.getItem('increment')) || 20;
+            levelDisplay.textContent = level; // Display the saved level
+            updateProgressBar();
+        };
+
+        function updateProgressBar() {
+            progressBar.style.width = currentProgress + '%';
+        }
+
+        function increaseProgress() {
+            if (currentProgress < 100) {
+                currentProgress += increment;
+                progressBar.style.width = Math.min(currentProgress, 100) + '%';
+            }
+        }
+
+        function resetProgress() {
+            if (currentProgress >= 100) {
+                increment *= 0.9; // Decrease increment after filling up
+                localStorage.setItem('increment', increment); // Save updated increment to localStorage
+
+                level += 1; // Increment the level
+                localStorage.setItem('level', level); // Save the level to localStorage
+                levelDisplay.textContent = level; // Update the displayed level
+            }
+            currentProgress = 0;
+            progressBar.style.width = '0%';
+
+            // Save current progress state to localStorage
+            localStorage.setItem('currentProgress', currentProgress);
+        }
+    </script>
+
+</body>
+
+</html>
