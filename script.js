@@ -109,4 +109,42 @@ taskInput.addEventListener("keyup", e => {
     localStorage.setItem("todo-list", JSON.stringify(todos));
     showTodo(document.querySelector("span.active").id);
   }
+  let currentProgress = 0;
+        let increment = 20; // Default increment value
+        let level = parseInt(localStorage.getItem('level')) || 0;
+        const progressBar = document.getElementById('progress');
+        const levelDisplay = document.getElementById('level');
+
+        window.onload = function () {
+            currentProgress = parseFloat(localStorage.getItem('currentProgress')) || 0;
+            increment = parseFloat(localStorage.getItem('increment')) || 20;
+            levelDisplay.textContent = level;
+            updateProgressBar();
+        };
+
+        function updateProgressBar() {
+            progressBar.style.width = currentProgress + '%';
+        }
+
+        function increaseProgress() {
+            if (currentProgress < 100) {
+                currentProgress += increment;
+                progressBar.style.width = Math.min(currentProgress, 100) + '%';
+            }
+        }
+
+        function resetProgress() {
+            if (currentProgress >= 100) {
+                increment *= 0.9;
+                localStorage.setItem('increment', increment);
+
+                level += 1;
+                localStorage.setItem('level', level);
+                levelDisplay.textContent = level;
+            }
+            currentProgress = 0;
+            progressBar.style.width = '0%';
+
+            localStorage.setItem('currentProgress', currentProgress);
+        }
 });
